@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Meshcore Contacts Cleaner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d6efd">
+
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/..."
+    crossorigin="anonymous"
+  >
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light">
+
+<div class="app-container d-flex flex-column min-vh-100">
+  <!-- Header -->
+  <header class="navbar navbar-light bg-white shadow-sm sticky-top">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        Meshcore Contacts Cleaner
+      </span>
+      <button id="helpButton" class="btn btn-outline-secondary btn-sm">
+        Help
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    <!-- Main View -->
+    <div id="mainView" class="container py-3">
+      <!-- 1) Upload -->
+      <section class="mb-3">
+        <h2 class="h5">1) Upload Meshcore contacts</h2>
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <p class="mb-2">
+              Select your <code>.json</code> Meshcore contacts export file.
+              All processing happens <strong>only in your browser</strong>.
+            </p>
+            <div class="mb-3">
+              <input
+                type="file"
+                id="fileInput"
+                class="form-control"
+                accept=".json,application/json"
+              >
+            </div>
+            <div id="uploadStatus" class="small text-muted"></div>
+            <div id="uploadError" class="alert alert-danger mt-2 d-none" role="alert"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2) Summary -->
+      <section id="summarySection" class="mb-3 d-none">
+        <h2 class="h5">2) Summary</h2>
+        <div class="card shadow-sm border-0">
+          <div class="card-body d-flex flex-column flex-sm-row align-items-sm-center justify-content-between">
+            <div class="mb-2 mb-sm-0">
+              <div><strong>Total contacts:</strong> <span id="totalCount">0</span></div>
+              <div><strong>Will be kept:</strong> <span id="keepCount">0</span></div>
+              <div><strong>Will be removed:</strong> <span id="removeCount">0</span></div>
+            </div>
+            <div class="d-flex flex-column">
+              <button id="selectAllKeep" class="btn btn-outline-secondary btn-sm mb-2">
+                Mark all as keep
+              </button>
+              <button id="selectAllRemove" class="btn btn-outline-danger btn-sm">
+                Mark all as remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3) Suggestions / Contact List -->
+      <section id="contactsSection" class="mb-4 d-none">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h5 mb-0">3) Suggestions</h2>
+        </div>
+        <div id="contactsList" class="contact-list"></div>
+      </section>
+
+      <!-- 4) Export -->
+      <section id="exportSection" class="mb-5 d-none">
+        <h2 class="h5">4) Export cleaned contacts</h2>
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <p class="small text-muted">
+              The cleaned file will use the same JSON structure as the original
+              Meshcore export and will only contain contacts marked as <strong>kept</strong>.
+            </p>
+            <button id="exportButton" class="btn btn-primary w-100">
+              Export cleaned JSON
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Help View -->
+    <div id="helpView" class="container py-3 d-none">
+      <h2 class="h5 mb-3">Help: Meshcore Export / Import</h2>
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <h3 class="h6">Export contacts from Meshcore</h3>
+          <ol class="mb-3">
+            <li>Open your Meshcore app.</li>
+            <li>Go to <strong>Settings</strong> (or equivalent configuration menu).</li>
+            <li>Select <strong>Export Config</strong>.</li>
+            <li>Choose to export <strong>only contacts</strong> (no other settings).</li>
+            <li>Save the exported <code>.json</code> file to your device.</li>
+          </ol>
+
+          <h3 class="h6">Import cleaned contacts into Meshcore</h3>
+          <ol class="mb-3">
+            <li>Keep your original export file as a <strong>backup</strong>.</li>
+            <li>Use this tool to clean up and download the cleaned contacts JSON.</li>
+            <li>In Meshcore, go to <strong>Settings → Import Config</strong>.</li>
+            <li>Select the cleaned contacts JSON file.</li>
+            <li>Confirm the import and verify that your contacts look correct.</li>
+          </ol>
+
+          <p class="small text-muted mb-0">
+            Recommendation: Always keep the original export file in case something
+            goes wrong and you need to restore your previous contacts.
+          </p>
+        </div>
+      </div>
+
+      <button id="backToMainButton" class="btn btn-outline-primary">
+        Back to main screen
+      </button>
+    </div>
+  </main>
+
+  <!-- Footer (optional) -->
+  <footer class="bg-white border-top py-2 small text-center text-muted">
+    Meshcore Contacts Cleaner – all processing in your browser, no server.
+  </footer>
+</div>
+
+<!-- Disclaimer Modal -->
+<div class="modal fade" id="disclaimerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Disclaimer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          This tool helps you clean up your Meshcore contacts. All processing happens
+          only in your browser.
+        </p>
+        <p>
+          However, you use this tool at your <strong>own risk</strong>. There is
+          <strong>no liability</strong> for any damaged contact lists, lost data,
+          or Meshcore app issues resulting from using the cleaned file.
+        </p>
+        <p>
+          Please ensure you keep a backup of your original Meshcore export file
+          before importing any cleaned contacts.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="disclaimerDecline" type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button id="disclaimerAccept" type="button" class="btn btn-primary">
+          I understand and accept
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS Bundle (for modal etc.) -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-QJHtvGhmr9bInhZRA2N6FJ0Q..."
+  crossorigin="anonymous"
+></script>
+
+<!-- App JS -->
+<script src="app.js"></script>
+
+</body>
+</html>
+

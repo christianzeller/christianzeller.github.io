@@ -1,0 +1,73 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Contact list layout */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Contact card */
+.contact-card {
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  padding: 0.75rem 0.75rem 0.75rem 0.5rem;
+}
+
+.contact-card-remove {
+  border-color: #dc3545;
+}
+
+.contact-card-remove .contact-name {
+  color: #dc3545;
+}
+
+.contact-checkbox {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.contact-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-name {
+  font-weight: 600;
+  font-size: 0.98rem;
+  margin-bottom: 0.1rem;
+}
+
+.contact-meta {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.contact-reason {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Small badge for remove suggestion */
+.badge-remove {
+  font-size: 0.7rem;
+}
+
+/* Make buttons full width on very small screens */
+@media (max-width: 480px) {
+  #selectAllKeep,
+  #selectAllRemove,
+  #exportButton,
+  #backToMainButton {
+    width: 100%;
+  }
+}
